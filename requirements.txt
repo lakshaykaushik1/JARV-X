@@ -1,0 +1,6 @@
+The libraries for installing in the python you need for this specific code are
+
+python -m pip install speechrecognition
+python -m pip install pyttsx3
+python -m pip install pyaudio
+python -m pip install ollama
