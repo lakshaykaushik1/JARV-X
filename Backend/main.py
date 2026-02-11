@@ -89,7 +89,69 @@ def ensure_ollama_ready():
         return False
 
 
-# ================= MAIN =================
+# ================= CORE PROCESS FUNCTION =================
+def process_query(query):
+    query = query.lower()
+
+    # -------- EXIT --------
+    if "exit" in query or "quit" in query or "shutdown" in query:
+        response = "Shutting down. Goodbye, sir."
+        say(response)
+        return response
+
+    # -------- BASIC TALK --------
+    if "how are you" in query:
+        response = "I am operating at full efficiency, sir."
+        say(response)
+        return response
+
+    if "who are you" in query:
+        response = "I am Jarvis, your personal artificial intelligence assistant."
+        say(response)
+        return response
+
+    if "what is your name" in query:
+        response = "My name is Jarvis, sir."
+        say(response)
+        return response
+
+    if "hello" in query or "hi" in query:
+        response = "Hello sir. How may I assist you?"
+        say(response)
+        return response
+
+    # -------- TIME --------
+    if "time" in query:
+        current_time = time.strftime("%I:%M %p")
+        response = f"The current time is {current_time}, sir."
+        say(response)
+        return response
+
+    # -------- OPEN WEBSITES --------
+    if query.startswith("open "):
+        site = query.replace("open ", "", 1).strip()
+
+        sites = {
+            "youtube": "https://www.youtube.com",
+            "google": "https://www.google.com",
+            "wikipedia": "https://www.wikipedia.org",
+            "linkedin": "https://www.linkedin.com",
+            "github": "https://www.github.com",
+        }
+
+        url = sites.get(site, f"https://{site}.com")
+        response = f"Opening {site}, sir."
+        say(response)
+        webbrowser.open(url)
+        return response
+
+    # -------- OLLAMA FALLBACK --------
+    reply = chat_with_ollama(query)
+    say(reply)
+    return reply
+
+
+# ================= OPTIONAL CLI MODE =================
 if __name__ == "__main__":
     init_tts()
 
@@ -101,69 +163,9 @@ if __name__ == "__main__":
 
     while True:
         query = take_command()
-        if query == "":
-            continue
-
-        # -------- EXIT --------
-        if "exit" in query or "quit" in query or "shutdown" in query:
-            response = "Shutting down. Goodbye, sir."
+        if query:
+            response = process_query(query)
             print("Jarvis:", response)
-            say(response)
-            break
 
-        # -------- BASIC TALK --------
-        if "how are you" in query:
-            response = "I am operating at full efficiency, sir."
-            print("Jarvis:", response)
-            say(response)
-            continue
-
-        if "who are you" in query:
-            response = "I am Jarvis, your personal artificial intelligence assistant."
-            print("Jarvis:", response)
-            say(response)
-            continue
-
-        if "what is your name" in query:
-            response = "My name is Jarvis, sir."
-            print("Jarvis:", response)
-            say(response)
-            continue
-
-        if "hello" in query or "hi" in query:
-            response = "Hello sir. How may I assist you?"
-            print("Jarvis:", response)
-            say(response)
-            continue
-
-        # -------- TIME --------
-        if "time" in query:
-            current_time = time.strftime("%I:%M %p")
-            response = f"The current time is {current_time}, sir."
-            print("Jarvis:", response)
-            say(response)
-            continue
-
-        # -------- OPEN WEBSITES --------
-        if query.startswith("open "):
-            site = query.replace("open ", "", 1).strip()
-
-            sites = {
-                "youtube": "https://www.youtube.com",
-                "google": "https://www.google.com",
-                "wikipedia": "https://www.wikipedia.org",
-                "linkedin": "https://www.linkedin.com",
-                "github": "https://www.github.com",
-            }
-
-            url = sites.get(site, f"https://{site}.com")
-            response = f"Opening {site}, sir."
-            print("Jarvis:", response)
-            say(response)
-            webbrowser.open(url)
-            continue
-
-        # -------- OLLAMA FALLBACK --------
-        reply = chat_with_ollama(query)
-        print("Jarvis:", reply)
-        say(reply)
+            if "shutting down" in response.lower():
+                break
