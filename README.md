@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # JARV-X 🤖🎙️
 
 <p align="center">
@@ -120,6 +119,3 @@ If you like this project:
 -Let’s make local AI powerful.
 
 ---
-=======
-# JARV-X
->>>>>>> 2be66ce7a454234d97ea3b35b044ac2413d818f2
